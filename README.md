@@ -37,9 +37,16 @@ $$\sigma_{\text{pred}}^2(t) = \sigma_{\text{noise}}^2 + \mathbf{x}(t)^\top \left
 │   ├── 2.cross_validation.py     # 5-fold cross-validation execution
 │   ├── 3.sensitivity_analysis.py # Sensitivity evaluation over K, d, and lambda
 │   ├── 4.analysis_and_plots.py   # Statistical tests and visualization generation
+│   ├── 5.generate_grid_plots.py  # Temporal reconstruction plots
+│   ├── 6.analyze_outliers.py     # Outlier and residual analysis
+│   ├── 7.generate_tables.py      # LaTeX and CSV summary table compilation
+│   ├── 8.generate_rtvf_grid.py   # Consolidated R-TVF grid figures
+│   ├── run_single_star.py        # Standalone imputation script for individual stars
+│   ├── run_pipeline.sh           # Automated pipeline execution script
 │   ├── lightCurve.py             # Data loader and benchmark baselines
 │   └── modelos_hads_lads.py      # Implementation of R-TVF and competing methods
 ├── src_2000/                     # Execution scripts for contiguous gaps of N = 2000 points
+│   └── run_pipeline_2000.sh      # Automated pipeline execution script for N = 2000
 ├── results/                      # Generated tables, metrics, and plots for N = 1000 points
 │   ├── 1_grid_search/            # Optimal hyperparameter configurations
 │   ├── 2_cross_validation/       # Fold-level prediction outputs and CSV records
@@ -63,41 +70,71 @@ pip install -r requirements.txt
 
 ## Reproducibility and Execution
 
-### 1. Gap Scenario N = 1000 points
+### 1. Single Star Imputation
+
+To execute R-TVF on an individual photometric time series (.dat file):
+
+```bash
+cd src
+
+# Run R-TVF on a single light curve with default parameters (K=10, d=1, lambda=0.1)
+python run_single_star.py --star "../db/hads/HD 146953lc.dat" --gap-size 1000 --output-plot reconstruction.png
+
+# Optional export of reconstructed series to CSV
+python run_single_star.py --star "../db/lads/TIC 452982723lc.dat" --gap-size 1000 --output-plot reconstruction.png --output-csv imputed_series.csv
+```
+
+Parameters:
+* `--star`: Path to input photometric file.
+* `--gap-start`: Start index of the gap (integer). When omitted, index is selected randomly.
+* `--gap-size`: Number of contiguous missing observations (default: 1000).
+* `--K`: Number of dominant Fourier frequencies (default: 10).
+* `--degree`: Polynomial modulation degree d (default: 1).
+* `--l2`: Tikhonov regularization parameter lambda (default: 0.1).
+* `--output-plot`: Destination filepath for the reconstruction figure.
+* `--output-csv`: Destination filepath for the reconstructed numerical time series.
+
+### 2. Gap Scenario N = 1000 points
 
 Navigate to the `src` directory to execute each phase of the evaluation pipeline:
 
 ```bash
 cd src
 
-# Phase 1: Hyperparameter grid search
+# Sequential execution:
 python 1.grid_search.py
-
-# Phase 2: 5-fold cross-validation
 python 2.cross_validation.py
-
-# Phase 3: Hyperparameter sensitivity analysis
 python 3.sensitivity_analysis.py
-
-# Phase 4: Statistical testing and figure generation
 python 4.analysis_and_plots.py
+python 7.generate_tables.py
+python 5.generate_grid_plots.py
+python 8.generate_rtvf_grid.py
+
+# Alternatively, execute the full pipeline script:
+bash run_pipeline.sh
 ```
 
-### 2. Gap Scenario N = 2000 points
+### 3. Gap Scenario N = 2000 points
 
 Navigate to the `src_2000` directory to execute the evaluation for extended gaps:
 
 ```bash
 cd src_2000
 
-# Execute 5-fold cross-validation for N = 2000 points
+# Sequential execution:
+python 1.grid_search.py
 python 2.cross_validation.py
-
-# Generate statistical analyses and figures for N = 2000 points
+python 3.sensitivity_analysis.py
 python 4.analysis_and_plots.py
+python 7.generate_tables.py
+python 5.generate_grid_plots.py
+python 8.generate_rtvf_grid.py
+
+# Alternatively, execute the full pipeline script:
+bash run_pipeline_2000.sh
 ```
 
-### 3. Frequency-Domain Validation
+### 4. Frequency-Domain Validation
 
 Navigate to the `frequency_domain_validation` directory to evaluate spectral recovery:
 
