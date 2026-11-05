@@ -1,0 +1,14 @@
+Friedman Test Results (Star-level, N=72 independent stars, Scenario N=2000)
+N=72
+Chi2=322.09
+p-value=< 0.001
+SIGNIFICANT differences detected
+
+Average Ranks (lower is better):
+Method        Rank
+R-TVF         1.39
+ARMAX         2.08
+FS-BSM        2.61
+TBATS         4.04
+DHR           4.89
+GP-Celerite   5.99

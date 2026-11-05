@@ -1,0 +1,6 @@
+Comparison,Raw_p_value,Corrected_p_value,Significant_alpha_0_05
+R-TVF vs ARMAX,0.008,0.008,Yes
+R-TVF vs GP-Celerite,< 0.001,< 0.001,Yes
+R-TVF vs DHR,< 0.001,< 0.001,Yes
+R-TVF vs TBATS,< 0.001,< 0.001,Yes
+R-TVF vs FS-BSM,< 0.001,< 0.001,Yes
